@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 ///lib/utils/toast_utils.dart
-///Toast工具类
+///Toast工具类 // 模拟器不显示弹框
 class ToastUtils {
   static void showToast(String message) {
     // 根据消息长度决定自动消失时间

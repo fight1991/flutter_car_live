@@ -6,7 +6,6 @@ import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
