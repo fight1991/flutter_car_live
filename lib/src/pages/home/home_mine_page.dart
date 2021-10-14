@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -70,7 +72,7 @@ class _MinePage extends State<MinePage> {
       'iconColor': Color(0xffffa44b),
       'label': '退出登录',
       'bottomBorder': false,
-      'navigator': null,
+      'navigator': 'logOut',
       'gap': false
     }
   ];
@@ -183,5 +185,49 @@ class _MinePage extends State<MinePage> {
   }
 
   // listTitle点击事件
-  void listTitleOnTap(int index) {}
+  void listTitleOnTap(int index) {
+    LogUtils.e('点击listTile');
+    String _op = _listData[index]['navigator'];
+    if (_op == 'logOut') {
+      logOutBtn();
+    } else {
+      // 跳转到其它页面
+    }
+  }
+
+  // 退出登录
+  void logOutBtn() async {
+    var flag = await showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('温馨提示'),
+          content: Container(
+            padding: EdgeInsets.all(12),
+            child: Text('您确定要退出登录吗?'),
+          ),
+          actions: [
+            // 左边按钮
+            CupertinoDialogAction(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('退出'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (flag) {
+      // 点击确定按钮
+      LogUtils.e('确定退出');
+      ToastUtils.showToast('退出成功!');
+    }
+  }
 }
