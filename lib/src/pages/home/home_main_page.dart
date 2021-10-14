@@ -23,7 +23,7 @@ class _MainPage extends State<MainPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
-          children: [buildGridBox()],
+          children: [buildGridBox(), buildBtnBox()],
         ),
       ),
     );
@@ -57,6 +57,60 @@ class _MainPage extends State<MainPage> {
         ),
         SizedBox(height: 5),
         Text(label)
+      ],
+    );
+  }
+
+  Widget buildBtnBox() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: 15, bottom: 15),
+      decoration: BoxDecoration(color: Colors.white),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              child: buildBtnItem(bg: 'plate-bg.png', label: '电子车牌'),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: buildBtnItem(bg: 'car-bg.png', label: '我的车辆'),
+                  ),
+                  Container(
+                    child: buildBtnItem(bg: 'scan-bg.png', label: '扫一扫'),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildBtnItem({required String bg, String label = ''}) {
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/images/$bg',
+          fit: BoxFit.fill,
+        ),
+        Positioned(
+          left: 10,
+          top: 12,
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 18),
+          ),
+        )
       ],
     );
   }
