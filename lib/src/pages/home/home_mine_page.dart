@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class MinePage extends StatefulWidget {
 class _MinePage extends State<MinePage> {
   List<Map<String, dynamic>> _listData = [
     {
-      'leadIcon': '',
+      'leadIcon': IconFont.icon_card_finance,
       'iconColor': Color(0xffffa44b),
       'label': '我的银行卡',
       'bottomBorder': true,
@@ -20,39 +20,39 @@ class _MinePage extends State<MinePage> {
       'gap': false
     },
     {
-      'leadIcon': '',
-      'iconColor': Color(0xffffa44b),
+      'leadIcon': IconFont.icon_ticket,
+      'iconColor': Color(0xff447fff),
       'label': '我的卡券',
       'bottomBorder': true,
       'navigator': null,
       'gap': true
     },
     {
-      'leadIcon': '',
-      'iconColor': Color(0xffffa44b),
+      'leadIcon': IconFont.icon_order,
+      'iconColor': Color(0xff447fff),
       'label': '订单管理',
       'bottomBorder': true,
       'navigator': null,
       'gap': false
     },
     {
-      'leadIcon': '',
-      'iconColor': Color(0xffffa44b),
+      'leadIcon': IconFont.icon_car,
+      'iconColor': Color(0xff447fff),
       'label': '我的车辆',
       'bottomBorder': true,
       'navigator': null,
       'gap': false
     },
     {
-      'leadIcon': '',
-      'iconColor': Color(0xffffa44b),
+      'leadIcon': IconFont.icon_info,
+      'iconColor': Color(0xff0dd7be),
       'label': '我的消息',
       'bottomBorder': true,
       'navigator': null,
       'gap': false
     },
     {
-      'leadIcon': '',
+      'leadIcon': IconFont.icon_send,
       'iconColor': Color(0xffffa44b),
       'label': '推送设置',
       'bottomBorder': true,
@@ -60,7 +60,7 @@ class _MinePage extends State<MinePage> {
       'gap': false
     },
     {
-      'leadIcon': '',
+      'leadIcon': IconFont.icon_setting,
       'iconColor': Color(0xffffa44b),
       'label': '个人设置',
       'bottomBorder': false,
@@ -68,8 +68,8 @@ class _MinePage extends State<MinePage> {
       'gap': true
     },
     {
-      'leadIcon': '',
-      'iconColor': Color(0xffffa44b),
+      'leadIcon': IconFont.icon_logout,
+      'iconColor': Colors.red,
       'label': '退出登录',
       'bottomBorder': false,
       'navigator': 'logOut',
@@ -169,11 +169,11 @@ class _MinePage extends State<MinePage> {
             ),
             child: ListTile(
               leading: Icon(
-                Icons.card_giftcard,
+                _listData[index]['leadIcon'],
                 color: _listData[index]['iconColor'],
               ),
               title: Text(_listData[index]['label']),
-              trailing: Icon(Icons.arrow_right),
+              trailing: Icon(IconFont.icon_arrow_right),
               onTap: () {
                 listTitleOnTap(index);
               },
