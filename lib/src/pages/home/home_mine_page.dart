@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -7,13 +8,180 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
+  List<Map<String, dynamic>> _listData = [
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '我的银行卡',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': false
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '我的卡券',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': true
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '订单管理',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': false
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '我的车辆',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': false
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '我的消息',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': false
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '推送设置',
+      'bottomBorder': true,
+      'navigator': null,
+      'gap': false
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '个人设置',
+      'bottomBorder': false,
+      'navigator': null,
+      'gap': true
+    },
+    {
+      'leadIcon': '',
+      'iconColor': Color(0xffffa44b),
+      'label': '退出登录',
+      'bottomBorder': false,
+      'navigator': null,
+      'gap': false
+    }
+  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('我的'),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: ListView(
+        children: [
+          buildHeadUser(),
+          buildListView(),
+        ],
       ),
-      body: Container(),
     );
   }
+
+  // 用户状态
+  Widget buildHeadUser() {
+    return Container(
+      padding: EdgeInsets.only(top: 30, bottom: 20, left: 10, right: 10),
+      margin: EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(color: Colors.white),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 裁剪成圆形
+          ClipOval(
+            child: Image.asset(
+              'assets/images/user_static_logo.png',
+              height: 80,
+              width: 80,
+              fit: BoxFit.fill,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(child: buildStatusBox()),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStatusBox() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '聪',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        Row(
+          children: [
+            Text(
+              '已实名',
+              style: TextStyle(color: Theme.of(context).accentColor),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              '电子车牌',
+              style: TextStyle(color: Theme.of(context).accentColor),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // listTilte列表
+  Widget buildListView() {
+    return Container(
+      // padding: EdgeInsets.symmetric(horizontal: 8),
+      child: ListView.builder(
+        shrinkWrap: true, //范围内进行包裹（内容多高ListView就多高）
+        physics: NeverScrollableScrollPhysics(), //禁止滚动
+        itemCount: _listData.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: EdgeInsets.only(bottom: _listData[index]['gap'] ? 15 : 0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(
+                  width: 1,
+                  color: _listData[index]['bottomBorder']
+                      ? Color(0xfff5f5f5)
+                      : Color(0xffffffff),
+                ),
+              ),
+            ),
+            child: ListTile(
+              leading: Icon(
+                Icons.card_giftcard,
+                color: _listData[index]['iconColor'],
+              ),
+              title: Text(_listData[index]['label']),
+              trailing: Icon(Icons.arrow_right),
+              onTap: () {
+                listTitleOnTap(index);
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // listTitle点击事件
+  void listTitleOnTap(int index) {}
 }
