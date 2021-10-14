@@ -82,3 +82,8 @@ flutter:
   assets:
     - assets/images/
     - assets/video/
+  
+  fonts:
+    - family: IconFont
+      fonts:
+        - asset: assets/iconfonts/iconfont.ttf
