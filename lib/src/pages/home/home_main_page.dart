@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/src/subpages/maint/maint_list_page.dart';
+import 'package:flutter_car_live/src/subpages/refuel/refuel_list_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
@@ -69,27 +72,51 @@ class _MainPage extends State<MainPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          girdBtnItem(iconName: 'oil.png', label: '无感加油'),
-          girdBtnItem(iconName: 'maintenance.png', label: '维修保养'),
-          girdBtnItem(iconName: 'wash.png', label: '洗车美容'),
-          girdBtnItem(iconName: 'parking.png', label: '智慧停车'),
+          girdBtnItem(
+            iconName: 'oil.png',
+            label: '无感加油',
+            targPage: RefuelListPage(),
+          ),
+          girdBtnItem(
+            iconName: 'maintenance.png',
+            label: '维修保养',
+            targPage: MaintListPage(),
+          ),
+          girdBtnItem(
+            iconName: 'wash.png',
+            label: '洗车美容',
+            targPage: RefuelListPage(),
+          ),
+          girdBtnItem(
+            iconName: 'parking.png',
+            label: '智慧停车',
+            targPage: RefuelListPage(),
+          ),
         ],
       ),
     );
   }
 
-  Widget girdBtnItem({String iconName = 'oil.png', String label = ''}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/images/$iconName',
-          width: 56,
-          height: 56,
-        ),
-        SizedBox(height: 5),
-        Text(label)
-      ],
+  Widget girdBtnItem(
+      {String iconName = 'oil.png',
+      String label = '',
+      required Widget targPage}) {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtils.pushPage(context: context, targPage: targPage);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/$iconName',
+            width: 56,
+            height: 56,
+          ),
+          SizedBox(height: 5),
+          Text(label)
+        ],
+      ),
     );
   }
 
