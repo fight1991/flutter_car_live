@@ -10,7 +10,7 @@ class _MaintListPage extends State<MaintListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('无感加油'),
+        title: Text('维修保养'),
       ),
       body: Container(),
     );

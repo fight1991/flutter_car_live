@@ -11,7 +11,7 @@ class _ParkingListPage extends State<ParkingListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('停车'),
+        title: Text('智慧停车'),
       ),
     );
   }
