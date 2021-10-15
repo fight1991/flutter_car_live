@@ -25,7 +25,7 @@ class _MainPage extends State<MainPage> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: Column(
+        child: ListView(
           children: [
             buildCouponBox(), //优惠券轮播区域
             buildGridBox(), //业务按钮区域
@@ -37,7 +37,6 @@ class _MainPage extends State<MainPage> {
   }
 
   Widget buildCouponBox() {
-    print(MediaQuery.of(context).size);
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       height: MediaQuery.of(context).size.width * (178 / 690),
@@ -85,8 +84,8 @@ class _MainPage extends State<MainPage> {
       children: [
         Image.asset(
           'assets/images/$iconName',
-          width: 64,
-          height: 64,
+          width: 56,
+          height: 56,
         ),
         SizedBox(height: 5),
         Text(label)
