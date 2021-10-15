@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/subpages/maint/maint_list_page.dart';
+import 'package:flutter_car_live/src/subpages/parking/parking_list_page.dart';
 import 'package:flutter_car_live/src/subpages/refuel/refuel_list_page.dart';
+import 'package:flutter_car_live/src/subpages/wash/wash_list_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
@@ -85,12 +87,12 @@ class _MainPage extends State<MainPage> {
           girdBtnItem(
             iconName: 'wash.png',
             label: '洗车美容',
-            targPage: RefuelListPage(),
+            targPage: WashListPage(),
           ),
           girdBtnItem(
             iconName: 'parking.png',
             label: '智慧停车',
-            targPage: RefuelListPage(),
+            targPage: ParkingListPage(),
           ),
         ],
       ),
