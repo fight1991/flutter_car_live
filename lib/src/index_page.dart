@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
-import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
 class IndexPage extends StatefulWidget {

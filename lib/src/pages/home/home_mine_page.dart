@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
@@ -209,7 +211,10 @@ class _MinePage extends State<MinePage> {
           actions: [
             // 左边按钮
             CupertinoDialogAction(
-              child: Text('取消'),
+              child: Text(
+                '取消',
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -227,6 +232,11 @@ class _MinePage extends State<MinePage> {
     if (flag) {
       // 点击确定按钮
       LogUtils.e('确定退出');
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: LoginPage(),
+        isReplace: true,
+      );
       ToastUtils.showToast('退出成功!');
     }
   }
