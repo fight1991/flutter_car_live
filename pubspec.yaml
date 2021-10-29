@@ -34,9 +34,9 @@ dependencies:
   signature: ^4.1.1
 
   #App版本信息
-  package_info: ^0.4.3+2
+  package_info: ^2.0.2
   #用来加载网络数据
-  dio: 3.0.9
+  dio: 4.0.1
   # WebView
   webview_flutter: ^1.0.7
 

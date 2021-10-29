@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:flutter_car_live/widgets/new_old_price/newOldPrice.dart';
 import 'package:flutter_car_live/widgets/tag/tag.dart';
@@ -95,22 +98,50 @@ class _RefuelListPage extends State<RefuelListPage> {
   }
 
   Widget buildListBox() {
-    return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-      child: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return buildListItem(
-              title: '加油站',
-              subTitle: '无锡市经济开发区清舒道88号',
-              textline3: NewOldPrice(
-                newPrice: '6.45',
-                oldPrice: '7.56',
-              ),
-              textline4: Tag(
-                label: '加油站$index',
-                color: Color(0xfff1989fa),
-              ));
+    return NotificationListener<ScrollEndNotification>(
+      onNotification: (ScrollNotification notification) {
+        LogUtils.e("滑动结束了了了");
+        //在滑动结束的时候 判断下如果滑动了 2/3数据
+        //就自动加载下一页数据
+        //获取滑动的距离
+        //ScrollMetrics 是保存就滑动相关的信息
+        // pixels
+        ScrollMetrics scrollMetrics = notification.metrics;
+        //获取滑动的距离
+        double pixels = scrollMetrics.pixels;
+        //获取最大滑动的距离
+        double maxPixels = scrollMetrics.maxScrollExtent;
+        //获取滑动的方向
+        // AxisDirection axisDirection = scrollMetrics.axisDirection;
+        if (pixels >= maxPixels / 3 * 2) {
+          //加载更多
+          loadmore();
+        }
+        //返回true 阻止再向上发送通知
+        return true;
+      },
+      child: RefreshIndicator(
+        child: Container(
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+          child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (BuildContext context, int index) {
+              return buildListItem(
+                  title: '加油站',
+                  subTitle: '无锡市经济开发区清舒道88号',
+                  textline3: NewOldPrice(
+                    newPrice: '6.45',
+                    oldPrice: '7.56',
+                  ),
+                  textline4: Tag(
+                    label: '加油站$index',
+                    color: Color(0xfff1989fa),
+                  ));
+            },
+          ),
+        ),
+        onRefresh: () {
+          return onRefresh();
         },
       ),
     );
@@ -161,5 +192,67 @@ class _RefuelListPage extends State<RefuelListPage> {
         ],
       ),
     );
+  }
+
+  // 下拉刷新
+  Future<bool> onRefresh() async {
+    // 最少显示一秒
+    await Future.delayed(Duration(milliseconds: 1000));
+    ToastUtils.showToast("已刷新");
+    return true;
+  }
+
+  int _pageIndex = 1;
+  int _pageSize = 10;
+  bool _isLoading = false;
+  //加载更多
+  loadmore() {
+    if (!_isLoading) {
+      _isLoading = true;
+      _pageIndex++;
+      loadingNetData();
+    }
+  }
+
+  Future<void> loadingNetData() async {
+    //添加一下分页请求信息
+    Map<String, dynamic> map = new Map();
+    //当前页数
+    map["pageIndex"] = _pageIndex;
+    //每页大小
+    map["pageSize"] = _pageSize;
+    //使用模拟数据
+    ResponseInfo responseInfo =
+        await Future.delayed(Duration(milliseconds: 1000), () {
+      List list = [];
+      for (int i = 0; i < 10; i++) {
+        list.add({
+          "title": "测试数据$i",
+          "artInfo": "这里是测试数据的简介",
+          "readCount": 100,
+          "pariseCount": 120,
+        });
+      }
+      return ResponseInfo(data: list);
+    });
+    //加载结束标识
+    _isLoading = false;
+    if (responseInfo.success) {
+      List list = responseInfo.data;
+      //无数据时 更新索引
+      if (list.length == 0 && _pageIndex != 1) {
+        _pageIndex--;
+      }
+      if (_pageIndex == 1) {
+        //清空一下数据
+      }
+      list.forEach((element) {
+        // 添加数据
+      });
+      setState(() {});
+    } else {
+      ToastUtils.showToast("请求失败");
+    }
+    return;
   }
 }
