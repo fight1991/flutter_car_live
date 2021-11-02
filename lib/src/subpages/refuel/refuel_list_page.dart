@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/widgets/common_card/card_bean.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:flutter_car_live/widgets/common_card/common_card.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:flutter_car_live/widgets/new_old_price/newOldPrice.dart';
 import 'package:flutter_car_live/widgets/tag/tag.dart';
@@ -12,6 +14,12 @@ class RefuelListPage extends StatefulWidget {
 }
 
 class _RefuelListPage extends State<RefuelListPage> {
+  @override
+  void initState() {
+    onRefresh();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,19 +132,20 @@ class _RefuelListPage extends State<RefuelListPage> {
         child: Container(
           padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
           child: ListView.builder(
-            itemCount: 10,
+            itemCount: _listData.length,
             itemBuilder: (BuildContext context, int index) {
-              return buildListItem(
-                  title: '加油站',
-                  subTitle: '无锡市经济开发区清舒道88号',
-                  textline3: NewOldPrice(
-                    newPrice: '6.45',
-                    oldPrice: '7.56',
-                  ),
-                  textline4: Tag(
-                    label: '加油站$index',
-                    color: Color(0xfff1989fa),
-                  ));
+              CardBean oilShopBean = _listData[index];
+              return CommonCard(
+                cardBean: oilShopBean,
+                textline3: NewOldPrice(
+                  newPrice: '${oilShopBean.newPrice}',
+                  oldPrice: '${oilShopBean.oldPrice}',
+                ),
+                textline4: Tag(
+                  label: '加油$index',
+                  color: Color(0xfff1989fa),
+                ),
+              );
             },
           ),
         ),
@@ -147,90 +156,46 @@ class _RefuelListPage extends State<RefuelListPage> {
     );
   }
 
-  Widget buildListItem({
-    String title = '',
-    String subTitle = '',
-    Widget? textline3,
-    Widget? textline4,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(
-            'assets/images/maintenance.png',
-            fit: BoxFit.contain,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    subTitle,
-                    style: TextStyle(color: Color(0xff808080)),
-                  ),
-                  textline3 ?? Container(),
-                  textline4 ?? Container()
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // 下拉刷新,上拉加载变量
+  int _pageIndex = 1;
+  int _pageSize = 10;
+  bool _isLoading = false;
+  List _listData = [];
 
   // 下拉刷新
   Future<bool> onRefresh() async {
     // 最少显示一秒
     await Future.delayed(Duration(milliseconds: 1000));
-    ToastUtils.showToast("已刷新");
+    _pageIndex = 1;
+    await loadingNetData();
+    ToastUtils.showToast('已刷新');
     return true;
   }
 
-  int _pageIndex = 1;
-  int _pageSize = 10;
-  bool _isLoading = false;
   //加载更多
   loadmore() {
-    if (!_isLoading) {
-      _isLoading = true;
-      _pageIndex++;
-      loadingNetData();
-    }
+    if (_isLoading) return _isLoading = true;
+    _pageIndex++;
+    loadingNetData();
   }
 
   Future<void> loadingNetData() async {
     //添加一下分页请求信息
     Map<String, dynamic> map = new Map();
     //当前页数
-    map["pageIndex"] = _pageIndex;
+    map['pageIndex'] = _pageIndex;
     //每页大小
-    map["pageSize"] = _pageSize;
+    map['pageSize'] = _pageSize;
     //使用模拟数据
     ResponseInfo responseInfo =
         await Future.delayed(Duration(milliseconds: 1000), () {
       List list = [];
       for (int i = 0; i < 10; i++) {
         list.add({
-          "title": "测试数据$i",
-          "artInfo": "这里是测试数据的简介",
-          "readCount": 100,
-          "pariseCount": 120,
+          'title': '加油站$i',
+          'address': '北京中南海同仁堂48号',
+          'newPrice': '100',
+          'oldPrice': '120',
         });
       }
       return ResponseInfo(data: list);
@@ -245,13 +210,14 @@ class _RefuelListPage extends State<RefuelListPage> {
       }
       if (_pageIndex == 1) {
         //清空一下数据
+        _listData = [];
       }
       list.forEach((element) {
-        // 添加数据
+        _listData.add(CardBean.fromMap(element));
       });
       setState(() {});
     } else {
-      ToastUtils.showToast("请求失败");
+      ToastUtils.showToast('请求失败');
     }
     return;
   }
