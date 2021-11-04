@@ -29,8 +29,8 @@ class _RefuelListPage extends State<RefuelListPage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        // decoration: BoxDecoration(color: Color(0xffF5F9FC)),
-        decoration: BoxDecoration(color: Colors.pink[50]),
+        decoration: BoxDecoration(color: Color(0xffF5F9FC)),
+        // decoration: BoxDecoration(color: Colors.pink[50]),
         child: Column(
           children: [
             // 搜索框
@@ -44,7 +44,9 @@ class _RefuelListPage extends State<RefuelListPage> {
                 child: Stack(
                   children: [
                     // 列表区域
-                    buildListBox()
+                    buildListBox(),
+                    // 蒙层区域
+                    buildMaskBox(),
                   ],
                 ),
               ),
@@ -79,16 +81,22 @@ class _RefuelListPage extends State<RefuelListPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          buildSelectItem('附近'),
-          buildSelectItem('油号'),
-          buildSelectItem('距离'),
+          buildSelectItem('附近', 0),
+          buildSelectItem('油号', 1),
+          buildSelectItem('距离', 2),
         ],
       ),
     );
   }
 
-  Widget buildSelectItem(String text) {
+  Widget buildSelectItem(String text, int index) {
     return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (_dropDownIndex == index) return;
+          _dropDownIndex = index;
+        });
+      },
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
@@ -220,5 +228,76 @@ class _RefuelListPage extends State<RefuelListPage> {
       ToastUtils.showToast('请求失败');
     }
     return;
+  }
+
+  // 蒙层区域
+  int _dropDownIndex = 0;
+  var _distanceValue = 3;
+  var _oilTypeValue = '92#';
+  var _otherValue = 'distance';
+
+  List _distanceList = [
+    {'label': '3km', 'value': '3'},
+    {'label': '5km', 'value': '5'},
+    {'label': '10km', 'value': '10'},
+    {'label': '15km', 'value': '15'},
+    {'label': '不限', 'value': '-1'}
+  ];
+  List _oilTypeList = [
+    {'label': '92#', 'value': '92#'},
+    {'label': '95#', 'value': '95#'},
+    {'label': '98#', 'value': '98#'},
+    {'label': '0#', 'value': '0#'}
+  ];
+  List _otherList = [
+    {'label': '距离最近', 'value': 'distance'},
+    {'label': '价格最低', 'value': 'price'}
+  ];
+  buildMaskBox() {
+    return Positioned.fill(
+      child: Container(
+        decoration: BoxDecoration(color: Colors.pink[50]),
+        child: IndexedStack(
+          index: _dropDownIndex,
+          children: [
+            buildDropdownItem(_distanceList),
+            buildDropdownItem(_oilTypeList),
+            buildDropdownItem(_otherList),
+          ],
+        ),
+      ),
+    );
+  }
+
+  buildDropdownItem(List option) {
+    var itemWith = MediaQuery.of(context).size.width;
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 30),
+      decoration: BoxDecoration(color: Colors.white),
+      child: GridView.builder(
+        itemCount: option.length,
+        shrinkWrap: true, // 决定container高度, 否则继承父组件
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 20,
+          childAspectRatio: (itemWith - 2 * 10) / 3 / 26,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          Map temp = option[index];
+          return Center(
+            child: Tag(
+              width: 50,
+              height: 26,
+              label: temp['label'],
+              value: temp['value'],
+              onTap: (value) {
+                if (value != null) {}
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
