@@ -276,7 +276,7 @@ class _RefuelListPage extends State<RefuelListPage> {
       decoration: BoxDecoration(color: Colors.white),
       child: GridView.builder(
         itemCount: option.length,
-        shrinkWrap: true, // 决定container高度, 否则继承父组件
+        shrinkWrap: true, // Container跟随GridView内容变化高度
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           crossAxisSpacing: 10,
