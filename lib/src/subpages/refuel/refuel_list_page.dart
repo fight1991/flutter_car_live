@@ -81,9 +81,9 @@ class _RefuelListPage extends State<RefuelListPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          buildSelectItem('附近', 0),
-          buildSelectItem('油号', 1),
-          buildSelectItem('距离', 2),
+          buildSelectItem('附近', 1),
+          buildSelectItem('油号', 2),
+          buildSelectItem('距离', 3),
         ],
       ),
     );
@@ -93,7 +93,11 @@ class _RefuelListPage extends State<RefuelListPage> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (_dropDownIndex == index) return;
+          if (_dropDownIndex == index) {
+            _showMask = !_showMask;
+            return;
+          }
+          _showMask = true;
           _dropDownIndex = index;
         });
       },
@@ -151,7 +155,7 @@ class _RefuelListPage extends State<RefuelListPage> {
                 ),
                 textline4: Tag(
                   label: '加油$index',
-                  color: Color(0xfff1989fa),
+                  isActive: true,
                 ),
               );
             },
@@ -232,9 +236,9 @@ class _RefuelListPage extends State<RefuelListPage> {
 
   // 蒙层区域
   int _dropDownIndex = 0;
-  var _distanceValue = 3;
-  var _oilTypeValue = '92#';
-  var _otherValue = 'distance';
+  String _distanceValue = '3';
+  String _oilTypeValue = '92#';
+  String _otherValue = 'distance';
 
   List _distanceList = [
     {'label': '3km', 'value': '3'},
@@ -253,24 +257,48 @@ class _RefuelListPage extends State<RefuelListPage> {
     {'label': '距离最近', 'value': 'distance'},
     {'label': '价格最低', 'value': 'price'}
   ];
+  bool _showMask = false;
   buildMaskBox() {
-    return Positioned.fill(
-      child: Container(
-        decoration: BoxDecoration(color: Colors.pink[50]),
-        child: IndexedStack(
-          index: _dropDownIndex,
-          children: [
-            buildDropdownItem(_distanceList),
-            buildDropdownItem(_oilTypeList),
-            buildDropdownItem(_otherList),
-          ],
+    if (_showMask) {
+      return Positioned.fill(
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              _dropDownIndex = 0;
+              Future.delayed(Duration(microseconds: 0), () {
+                _showMask = false;
+              });
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(color: Colors.black45),
+            child: IndexedStack(
+              index: _dropDownIndex,
+              children: [
+                Container(),
+                buildDropdownItem(_distanceList, '_distance'),
+                buildDropdownItem(_oilTypeList, '_oilType'),
+                buildDropdownItem(_otherList, '_other'),
+              ],
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      setState(() {
+        _dropDownIndex = 0;
+      });
+      return Container();
+    }
   }
 
-  buildDropdownItem(List option) {
+  buildDropdownItem(List option, String flag) {
     var itemWith = MediaQuery.of(context).size.width;
+    Map<String, dynamic> map = {
+      '_distance': _distanceValue,
+      '_oilType': _oilTypeValue,
+      '_other': _otherValue
+    };
     return Container(
       padding: EdgeInsets.symmetric(vertical: 30),
       decoration: BoxDecoration(color: Colors.white),
@@ -278,21 +306,35 @@ class _RefuelListPage extends State<RefuelListPage> {
         itemCount: option.length,
         shrinkWrap: true, // Container跟随GridView内容变化高度
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+          crossAxisCount: 4,
           crossAxisSpacing: 10,
           mainAxisSpacing: 20,
-          childAspectRatio: (itemWith - 2 * 10) / 3 / 26,
+          childAspectRatio: (itemWith - 3 * 10) / 4 / 26,
         ),
         itemBuilder: (BuildContext context, int index) {
           Map temp = option[index];
+          String value = temp['value'];
+          String label = temp['label'];
           return Center(
             child: Tag(
-              width: 50,
+              width: 70,
               height: 26,
-              label: temp['label'],
-              value: temp['value'],
+              label: label,
+              value: value,
+              isActive: map[flag] == value,
               onTap: (value) {
-                if (value != null) {}
+                print(value);
+                setState(() {
+                  if (flag == '_distance') {
+                    _distanceValue = value;
+                  } else if (flag == '_oilType') {
+                    _oilTypeValue = value;
+                  } else {
+                    _otherValue = value;
+                  }
+                  _dropDownIndex = 0;
+                  _showMask = false;
+                });
               },
             ),
           );
